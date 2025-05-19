@@ -87,7 +87,7 @@ function generateTagSection(tagMap) {
 
   for (const tag of Object.keys(tagMap).sort()) {
     lines.push(`<details>`);
-    lines.push(`<summary>**#${tag}** (${tagMap[tag].length}개)</summary>`);
+    lines.push(`<summary>#${tag} (${tagMap[tag].length}개)</summary>`);
     lines.push(``);
     for (const entry of tagMap[tag]) {
       lines.push(
