@@ -7,6 +7,8 @@ const ROOT_DIR = `./${now.getFullYear()}/${String(now.getMonth() + 1).padStart(
   2,
   "0"
 )}`;
+console.log("📁 검색할 디렉토리:", ROOT_DIR);
+
 const README_PATH = "./README.md";
 const TAGS_SECTION_START = "<!-- TAGS_START -->";
 const TAGS_SECTION_END = "<!-- TAGS_END -->";
@@ -37,16 +39,23 @@ function extractTitle(content) {
 }
 
 function getAllMarkdownFiles(dir) {
+  console.log(`🔍 디렉토리 검색 중: ${dir}`);
   let results = [];
-  const list = fs.readdirSync(dir);
-  for (const file of list) {
-    const filePath = path.join(dir, file);
-    const stat = fs.statSync(filePath);
-    if (stat && stat.isDirectory()) {
-      results = results.concat(getAllMarkdownFiles(filePath));
-    } else if (file.endsWith(".md")) {
-      results.push(filePath);
+  try {
+    const list = fs.readdirSync(dir);
+    console.log(`📄 발견된 파일들:`, list);
+
+    for (const file of list) {
+      const filePath = path.join(dir, file);
+      const stat = fs.statSync(filePath);
+      if (stat && stat.isDirectory()) {
+        results = results.concat(getAllMarkdownFiles(filePath));
+      } else if (file.endsWith(".md")) {
+        results.push(filePath);
+      }
     }
+  } catch (error) {
+    console.error(`❌ 디렉토리 읽기 오류:`, error.message);
   }
   return results;
 }
@@ -87,9 +96,13 @@ function generateTagSection(tagMap) {
     "### 📌 Tags\n",
     "<style>",
     "summary.tag-summary {",
-    "  font-size: 1.3em;",
+    "  font-size: 1.2em;",
     "  font-weight: bold;",
-    "  margin: 1em 0;",
+    "  margin: 0.8em 0;",
+    "  cursor: pointer;",
+    "}",
+    "details {",
+    "  margin-bottom: 0.5em;",
     "}",
     "</style>\n",
   ];
@@ -113,3 +126,40 @@ function generateTagSection(tagMap) {
   console.log("✅ 태그 섹션 생성 완료");
   return tagSection;
 }
+
+function updateReadmeWithTags(tagSection) {
+  console.log("\n📝 README.md 업데이트 중...");
+  let original = "";
+  try {
+    original = fs.readFileSync(README_PATH, "utf-8");
+    console.log("✅ README.md 파일 읽기 성공");
+  } catch (error) {
+    console.log("⚠️ README.md 파일이 없어 새로 생성합니다.");
+    original = `# study-log\n공부 기록 남기기\n\n${TAGS_SECTION_START}\n\n### 📌 Tags\n\n${TAGS_SECTION_END}`;
+  }
+
+  const tagRegex = new RegExp(
+    `${TAGS_SECTION_START}[\\s\\S]*?${TAGS_SECTION_END}`
+  );
+
+  if (tagRegex.test(original)) {
+    console.log("✅ 기존 태그 섹션을 찾았습니다. 교체를 시작합니다.");
+    const newReadme = original.replace(
+      tagRegex,
+      `${TAGS_SECTION_START}\n\n${tagSection}\n\n${TAGS_SECTION_END}`
+    );
+    fs.writeFileSync(README_PATH, newReadme, "utf-8");
+  } else {
+    console.log("⚠️ 태그 섹션을 찾을 수 없어 파일 끝에 추가합니다.");
+    const newReadme = `${original}\n\n${TAGS_SECTION_START}\n\n${tagSection}\n\n${TAGS_SECTION_END}`;
+    fs.writeFileSync(README_PATH, newReadme, "utf-8");
+  }
+  console.log("✅ README.md 업데이트 완료");
+}
+
+// 스크립트 실행
+console.log("🚀 태그 생성 스크립트 시작");
+const tagMap = scanFilesAndCollectTags();
+const tagSection = generateTagSection(tagMap);
+updateReadmeWithTags(tagSection);
+console.log("✅ README.md 태그 목록 업데이트 완료!");
