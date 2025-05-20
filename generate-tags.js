@@ -83,11 +83,22 @@ function scanFilesAndCollectTags() {
 
 function generateTagSection(tagMap) {
   console.log("\n📋 태그 섹션 생성 중...");
-  const lines = ["### 📌 Tags\n"];
+  const lines = [
+    "### 📌 Tags\n",
+    "<style>",
+    "summary.tag-summary {",
+    "  font-size: 1.3em;",
+    "  font-weight: bold;",
+    "  margin: 1em 0;",
+    "}",
+    "</style>\n",
+  ];
 
   for (const tag of Object.keys(tagMap).sort()) {
     lines.push(`<details>`);
-    lines.push(`<summary>#${tag} (${tagMap[tag].length}개)</summary>`);
+    lines.push(
+      `<summary class="tag-summary">${tag} <code>${tagMap[tag].length}개</code></summary>`
+    );
     lines.push(``);
     for (const entry of tagMap[tag]) {
       lines.push(
@@ -102,39 +113,3 @@ function generateTagSection(tagMap) {
   console.log("✅ 태그 섹션 생성 완료");
   return tagSection;
 }
-
-function updateReadmeWithTags(tagSection) {
-  console.log("\n📝 README.md 업데이트 중...");
-  let original = "";
-  try {
-    original = fs.readFileSync(README_PATH, "utf-8");
-    console.log("✅ README.md 파일 읽기 성공");
-  } catch (error) {
-    console.log("⚠️ README.md 파일이 없어 새로 생성합니다.");
-    original = `# study-log\n공부 기록 남기기\n\n${TAGS_SECTION_START}\n\n### 📌 Tags\n\n${TAGS_SECTION_END}`;
-  }
-
-  const tagRegex = new RegExp(
-    `${TAGS_SECTION_START}[\\s\\S]*?${TAGS_SECTION_END}`
-  );
-
-  if (tagRegex.test(original)) {
-    console.log("✅ 기존 태그 섹션을 찾았습니다. 교체를 시작합니다.");
-    const newReadme = original.replace(
-      tagRegex,
-      `${TAGS_SECTION_START}\n\n${tagSection}\n\n${TAGS_SECTION_END}`
-    );
-    fs.writeFileSync(README_PATH, newReadme, "utf-8");
-  } else {
-    console.log("⚠️ 태그 섹션을 찾을 수 없어 파일 끝에 추가합니다.");
-    const newReadme = `${original}\n\n${TAGS_SECTION_START}\n\n${tagSection}\n\n${TAGS_SECTION_END}`;
-    fs.writeFileSync(README_PATH, newReadme, "utf-8");
-  }
-  console.log("✅ README.md 업데이트 완료");
-}
-
-const tagMap = scanFilesAndCollectTags();
-const tagSection = generateTagSection(tagMap);
-updateReadmeWithTags(tagSection);
-
-console.log("✅ README.md 태그 목록 업데이트 완료!");
