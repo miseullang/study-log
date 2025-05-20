@@ -94,17 +94,6 @@ function generateTagSection(tagMap) {
   console.log("\n📋 태그 섹션 생성 중...");
   const lines = [
     "### 📌 Tags\n",
-    "<style>",
-    "summary.tag-summary {",
-    "  font-size: 1.2em;",
-    "  font-weight: bold;",
-    "  margin: 0.8em 0;",
-    "  cursor: pointer;",
-    "}",
-    "details {",
-    "  margin-bottom: 0.5em;",
-    "}",
-    "</style>\n",
   ];
 
   for (const tag of Object.keys(tagMap).sort()) {

@@ -5,18 +5,6 @@
 
 ### 📌 Tags
 
-<style>
-summary.tag-summary {
-  font-size: 1.2em;
-  font-weight: bold;
-  margin: 0.8em 0;
-  cursor: pointer;
-}
-details {
-  margin-bottom: 0.5em;
-}
-</style>
-
 <details>
 <summary class="tag-summary">OptimisticUpdate <code>1개</code></summary>
 
