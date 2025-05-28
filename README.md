@@ -30,11 +30,12 @@
 </details>
 
 <details>
-<summary class="tag-summary">React <code>3개</code></summary>
+<summary class="tag-summary">React <code>4개</code></summary>
 
 - [19](2025/05/19.md) 🛠️ shadcn 검색 Input + Popover 연동 이슈 발생
 - [20](2025/05/20.md) 낙관적 업데이트를 위한 리액트 hook
 - [27-1](2025/05/27-1.md) React에서 Fast Refresh가 실패하는 이유와 주의사항 알아보기
+- [28](2025/05/28.md) React 초보자 가이드 - hooks와 함수는 각각 컴포넌트 내부/외부 중 어디에 두는 게 좋을까?
 </details>
 
 <details>
@@ -59,6 +60,12 @@
 <summary class="tag-summary">shadcn <code>1개</code></summary>
 
 - [19](2025/05/19.md) 🛠️ shadcn 검색 Input + Popover 연동 이슈 발생
+</details>
+
+<details>
+<summary class="tag-summary">최적화 <code>1개</code></summary>
+
+- [28](2025/05/28.md) React 초보자 가이드 - hooks와 함수는 각각 컴포넌트 내부/외부 중 어디에 두는 게 좋을까?
 </details>
 
 <details>
